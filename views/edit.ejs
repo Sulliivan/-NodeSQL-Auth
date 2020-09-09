@@ -1,0 +1,26 @@
+<%- include('./partials/header')-%>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+                <form method="POST" action="/auth/login">
+
+                    <h1>Compte utiliateur</h1>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">New email address</label>
+                      <input type="email" class="form-control" name="email" value="<% users.email %> ">
+                      <small id="emailHelp" class="form-text text-muted">Nous ne partagerons jamais votre e-mail avec qui que ce soit.</small>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">New password</label>
+                      <input type="password" class="form-control" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                  </form>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer')-%>

@@ -1,0 +1,49 @@
+<%- include('./partials/header')-%>
+
+
+
+    <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+
+              <h2>Liste Users</h2>
+              <table class="table">
+                  <thead>
+                           
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Suppression</th>
+                    <th scope="col">Editer</th>
+                  </tr>
+                </thead>
+
+                <% users.forEach(function(user) {%>
+                <tbody>
+                  <tr>
+                    <td><%= user.id%> </td>
+                    <td><%= user.email%> </td>
+                    <td><%= user.roleID%> </td>
+
+                    <td><form action="/users/list/delete/<%= user.id%>?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form></td>
+                    <td><a href="/users/edit/<%= user.id%>"><button type="submit" class="btn btn-primary">Edite </button></a></td>
+                    
+                  
+                  </tr>
+                </tbody>
+                <%});%>
+              </table>
+
+          </div>
+      </div>
+  </div>
+
+
+  </body>
+</html>
+
+<%- include('./partials/footer')-%>
