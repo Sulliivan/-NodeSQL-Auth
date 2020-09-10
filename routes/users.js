@@ -1,26 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const session = require('express-session');
 
-
-
-/// page de connection ///
-
-/* GET login page */
-router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'se connecter' });
-});
-
-/* get register page */
-router.get('/register', function(req, res, next) {
-    res.render('register', { title: "S'inscrire" });
-  });
-  
-
-
-
-
+/// page pour se connecter "LOGIN" ///
 /* user Edit  */ /// avec EDIT EJS 
-router.get('/edit/:id', function(req, res) {
+
+router.get('/login', function(req, res) {
 	if (req.session.auth) {
 		res.send('Welcome back, ' + req.session.email + '!');
 	} else {
@@ -29,24 +15,41 @@ router.get('/edit/:id', function(req, res) {
 	res.end();
 });
 
-router.post('/edit/:id', function(req, res) {
-	var username = req.body.username;
-	var password = req.body.password;
-	if (username && password) {
-		connection.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], function(err, res) {
-			if (results.length > 0) {
-				req.session.auth = true;
-				req.session.email = email;
-				res.send('ok');
-			} else {
-				res.send('email ou password incorrect');
-			}			
-			res.end();
-		});
-	} else {
-		res.send('Enter Email and Password!');
-		res.end();
-	}
-});
+router.post('/login',async (req, res) => {
+	const email = req.body.email;
+	const password = req.body.password;
+	
+	await query('SELECT * FROM users WHERE email = ?', [email], (err, result) => {
+      if (err || result.length === 0) {   
+        return res.status(401).json({
+          error: `Vous n'êtes pas inscrit`
+        });
+      } else {
+        bcrypt.compare(password, result[0].password, async (err, success) => {
+          if (err) {
+            return res.status(401).json({
+              error: `Bcrypt Auth failed`
+            });
+          }
+          if (success) {
+            await query('SELECT * FROM users WHERE email = ? AND password = ?', [email, result[0].password], function (err, results) {
+              if (results.length) {
+                req.session.auth = true;
+                req.session.email = result[0].email;
+				req.session.password = result[0].password;
+				req.session.role = result[0].roleID;
+				res.redirect('/index');
+				console.log(req.session);
+              } else {
+                res.send('err');
+              }
+            });
+          } else {
+            res.send('Email ou mot de passe incorrect !');
+          }
+        })
+      };
+    })
+  })
 
 module.exports = router;

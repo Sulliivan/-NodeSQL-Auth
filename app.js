@@ -2,9 +2,6 @@ const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const authRouter = require ('./routes/auth');
 const util = require("util");
 const mysql = require("mysql"); // donne accé a la base de donnée
 const path = require("path"); // utilise les fichiers
@@ -12,7 +9,21 @@ const methodOverride = require('method-override'); // pouvoir transformer le nom
 const fileUpload = require ('express-fileupload');
 const bcrypt = require('bcrypt');
 const app = express();
+const session = require('express-session');
 
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const authRouter = require ('./routes/auth');
+
+
+// Express-session
+app.use(session({
+  secret: 'shhuuuuut',
+  resave: false,
+  saveUninitialized: true,
+  name: 'biscuit',
+  cookie: {   maxAge: 24 * 60 * 60 * 7 * 1000}
+}))
 
 //////////////////////////////////////
 // rappel pour connection a la base de donner 
