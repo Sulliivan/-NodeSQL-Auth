@@ -35,10 +35,13 @@ router.post('/login',async (req, res) => {
             await query('SELECT * FROM users WHERE email = ? AND password = ?', [email, result[0].password], function (err, results) {
               if (results.length) {
                 req.session.auth = true;
+                req.session.id = result[0].id;
                 req.session.email = result[0].email;
-				req.session.password = result[0].password;
-				req.session.role = result[0].roleID;
-				res.redirect('/index');
+                req.session.password = result[0].password;
+                req.session.role = result[0].roleID;
+                req.session.cookie.expires = false;
+                req.session.cookie.maxAge = 5 * 60 * 1000;
+                res.redirect('/index');
 				console.log(req.session);
               } else {
                 res.send('err');

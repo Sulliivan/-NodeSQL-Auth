@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 ///// page acceuil avec qui recupere tout ///
 
@@ -43,7 +44,7 @@ router.post('/index', async (req, res, ) => {
           bcrypt.hash(password, 10, async (err, hash) =>{
               /* ajoute dans users */
               await query ('insert into users (email, password, roleId) value (?, ?, 2);',[email, hash,]);
-              res.redirect('/index')
+              res.render('/index', {session: req.session}); console.log("req.session:",session);
           } )
             
       }

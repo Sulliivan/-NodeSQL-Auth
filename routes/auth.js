@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const session = require('express-session');
+
+// middleware
+const verifyAuth = require("../middleware/auth.middleware")
 
 ////// Register page /////   /////// avec phill ///////
 /* get register page */
-router.get('/register', function(req, res, next) {
+router.get('/register',verifyAuth, function(req, res, next) {
     res.render('register', { title: "S'inscrire" });
   });
-  
 /* Post new utilisateur */
 router.post('/register', async (req, res, ) => {
 
